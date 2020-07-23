@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Data.Repository;
+using AutoMapper;
 
 namespace ShoppingCart.App
 {
@@ -51,6 +52,7 @@ namespace ShoppingCart.App
             services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
 
+            services.AddAutoMapper(typeof(Startup));
 
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
