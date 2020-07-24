@@ -14,14 +14,17 @@ namespace ShoppingCart.Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(250)");
 
+            builder.Property(p => p.Descricao)
+               .IsRequired()
+               .HasColumnType("varchar(500)");
+
+            builder.Property(p => p.Imagem)
+                .IsRequired()
+                .HasColumnType("varchar(max)");
+
             builder.Property(p => p.Codigo)
                 .IsRequired()
                 .HasColumnType("varchar(250)");
-
-            /*  1 : N Produto => ItemPedido (N : 1 ItemPedido => Produto) */
-
-            builder.HasMany(p => p.ItemPedidos).WithOne(p => p.Produto)
-                .HasForeignKey(p => p.ProdutoId);
 
             builder.ToTable("Produtos");
         }

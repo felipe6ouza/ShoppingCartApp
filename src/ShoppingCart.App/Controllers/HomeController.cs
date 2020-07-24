@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingCart.App.Models;
+using ShoppingCart.App.ViewModels;
 
 namespace ShoppingCart.App.Controllers
 {

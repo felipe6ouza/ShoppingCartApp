@@ -8,9 +8,10 @@ namespace ShoppingCart.Business.Models
     {
         public string Codigo { get; set; }
         public string Nome { get; set; }
+        public string Descricao { get; set; }
+        public string Imagem { get; set; }
         public decimal Preco { get; set; }
 
-        /* EF Relations*/
-        public IEnumerable<ItemPedido> ItemPedidos { get; set; }
+
     }
 }
