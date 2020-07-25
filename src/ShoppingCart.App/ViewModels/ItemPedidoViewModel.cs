@@ -13,6 +13,6 @@ namespace ShoppingCart.App.ViewModels
 
 
         public PedidoViewModel Pedido { get; set; }
-        public PedidoViewModel Produto { get; set; }
+        public ProdutoViewModel Produto { get; set; }
     }
 }
