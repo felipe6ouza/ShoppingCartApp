@@ -32,7 +32,7 @@ namespace ShoppingCart.App.Controllers
                 return NotFound();
             }
 
-            var produtoViewModel = await ObterFornercedorId(id);
+            var produtoViewModel = await ObterProdutoViewModelPorId(id);
 
             if (produtoViewModel == null)
             {
@@ -67,7 +67,7 @@ namespace ShoppingCart.App.Controllers
                 return NotFound();
             }
 
-            var produtoViewModel = await ObterFornercedorId(id);
+            var produtoViewModel = await ObterProdutoViewModelPorId(id);
             if (produtoViewModel == null)
             {
                 return NotFound();
@@ -92,7 +92,7 @@ namespace ShoppingCart.App.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProdutoExists(produtoViewModel.Id))
+                if (!await ProdutoExists(produtoViewModel.Id))
                 {
                     return NotFound();
                 }
@@ -109,7 +109,7 @@ namespace ShoppingCart.App.Controllers
         {
             if (id == null) return NotFound();
            
-            var produtoViewModel = await ObterFornercedorId(id);
+            var produtoViewModel = await ObterProdutoViewModelPorId(id);
             
             if (produtoViewModel == null) return NotFound();
             
@@ -120,27 +120,24 @@ namespace ShoppingCart.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var produtoViewModel = ObterFornercedorId(id);
-            if (produtoViewModel == null) return NotFound();
-
             await _produtoRepository.Remover(id);
             await _produtoRepository.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProdutoExists(Guid id)
-        {
-            var produto = _produtoRepository.Buscar(e => e.Id == id);
-
-            if (produto == null) return false;
-            
-            return true;
-        }
-
-        private async Task<ProdutoViewModel> ObterFornercedorId(Guid id)
+        private async Task<ProdutoViewModel> ObterProdutoViewModelPorId(Guid id)
         {
             return _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterPorId(id));
+        }
+
+        private async Task<bool> ProdutoExists(Guid id)
+        {
+            var produto = await _produtoRepository.Buscar(e => e.Id == id);
+
+            if (produto == null) return false;
+
+            return true;
         }
     }
 }
