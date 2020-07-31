@@ -28,4 +28,9 @@
     <ProjectReference Include="..\ShoppingCart.Data\ShoppingCart.Data.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\imgUploads\" />
+  </ItemGroup>
+
 </Project>

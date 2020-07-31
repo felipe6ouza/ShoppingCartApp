@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,9 @@ namespace ShoppingCart.App.ViewModels
     {
         [Key]
         public Guid Id { get; set; }
-
+        
+        [DisplayName("Upload de Imagem")]
+        public IFormFile ImagemUpload { get; set; }
         public string Imagem { get; set; }
 
         [DisplayName("Código")]
