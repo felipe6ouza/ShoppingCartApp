@@ -27,6 +27,12 @@ namespace ShoppingCart.App.Controllers
             return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterTodos()));
         }
 
+
+        public async Task<IActionResult> Catalogo()
+        {
+            return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterTodos()));
+        }
+
         public async Task<IActionResult> Details(Guid id)
         {
             if (id == null)

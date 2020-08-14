@@ -10,8 +10,8 @@ using ShoppingCart.Data.Context;
 namespace ShoppingCart.Data.Migrations
 {
     [DbContext(typeof(ShoppingCartDbContext))]
-    [Migration("20200724142223_FixInitialCreate")]
-    partial class FixInitialCreate
+    [Migration("20200813125427_CadastroAllowNullsColumn")]
+    partial class CadastroAllowNullsColumn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,39 +29,30 @@ namespace ShoppingCart.Data.Migrations
                     b.Property<string>("Bairro");
 
                     b.Property<string>("Cep")
-                        .IsRequired()
                         .HasColumnType("varchar(8)");
 
                     b.Property<string>("Cidade")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Complemento")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Logradouro")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Numero")
-                        .IsRequired()
                         .HasColumnType("varchar(8)");
 
                     b.Property<string>("Telefone")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");

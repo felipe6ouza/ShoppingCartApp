@@ -10,8 +10,8 @@ using ShoppingCart.Data.Context;
 namespace ShoppingCart.Data.Migrations
 {
     [DbContext(typeof(ShoppingCartDbContext))]
-    [Migration("20200721003001_Tabelas")]
-    partial class Tabelas
+    [Migration("20200810185806_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -114,6 +114,14 @@ namespace ShoppingCart.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(250)");
 
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("varchar(500)");
+
+                    b.Property<string>("Imagem")
+                        .IsRequired()
+                        .HasColumnType("varchar(max)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasColumnType("varchar(250)");
@@ -133,7 +141,7 @@ namespace ShoppingCart.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("ShoppingCart.Business.Models.Produto", "Produto")
-                        .WithMany("ItemPedidos")
+                        .WithMany()
                         .HasForeignKey("ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

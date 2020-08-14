@@ -9,8 +9,19 @@ namespace ShoppingCart.Business.Models
         public Guid CadastroId { get; set; }
 
         /* EF Relations*/
-        public IEnumerable<ItemPedido> Itens { get; set; }
+        public ICollection<ItemPedido> Itens { get; set; }
         public Cadastro Cadastro { get; set; }
+
+        public Pedido()
+        {
+            Cadastro = new Cadastro();
+            CadastroId = Cadastro.Id;
+        }
+        public Pedido(Cadastro cadastro)
+        {
+            Cadastro = cadastro;
+            CadastroId = cadastro.Id;
+        }
 
     }
 }

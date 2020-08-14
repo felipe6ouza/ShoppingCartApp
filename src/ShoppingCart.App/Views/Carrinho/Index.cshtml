@@ -1,0 +1,33 @@
+﻿@model ShoppingCart.App.ViewModels.CarrinhoViewModel
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th></th>
+            <th>Nome</th>
+            <th>Quantidade</th>
+            <th>Preço</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Itens)
+        {
+            <tr>
+                <td>
+                    <img style="max-width: 100px; max-height: 70px" src="~/imgUploads/@item.Produto.Imagem" alt="Imagem do Produto" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Produto.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantidade)
+                </td>
+                <td>
+                    @item.PrecoUnitario.ToString("C")
+                </td>
+            </tr>   
+        }
+    </tbody>
+</table>
+
+<h2 class="text-right"> Total: @Model.Total</h2>

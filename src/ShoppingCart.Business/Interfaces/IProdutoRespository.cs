@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ShoppingCart.Business.Interfaces
 {
     public interface IProdutoRepository : IRepository<Produto>
     {
+       Task<Produto> ObterPorCodigo(string Codigo);
     }
 }

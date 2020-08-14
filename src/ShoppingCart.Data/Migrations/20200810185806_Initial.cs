@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ShoppingCart.Data.Migrations
 {
-    public partial class Tabelas : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,6 +35,8 @@ namespace ShoppingCart.Data.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     Codigo = table.Column<string>(type: "varchar(250)", nullable: false),
                     Nome = table.Column<string>(type: "varchar(250)", nullable: false),
+                    Descricao = table.Column<string>(type: "varchar(500)", nullable: false),
+                    Imagem = table.Column<string>(type: "varchar(max)", nullable: false),
                     Preco = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>

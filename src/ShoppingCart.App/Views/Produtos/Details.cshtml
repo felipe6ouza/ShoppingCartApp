@@ -1,0 +1,28 @@
+﻿@model ShoppingCart.App.ViewModels.ProdutoViewModel
+
+@{
+    ViewData["Title"] = "Detalhes";
+}
+
+
+<div class="row">
+    <div class="col-md-4">
+        <img src="~/imgUploads/@Model.Imagem" alt="Imagem Produto" style="width: 250px; height: 328px" />
+    </div>
+    <div class="col-md-6 d-flex">
+        <div class="d-flex flex-column justify-content-center">
+            <h3>@Model.Nome</h3>
+            <hr />
+            <h6>@Model.Descricao</h6>
+            <hr />
+            <h3>R$@Model.Preco</h3>
+
+            <form method="post">
+                <button type="submit" class="btn btn-primary" asp-controller="Carrinho" asp-action="Carrinho" asp-route-codigo="@Model.Codigo">Comprar</button>
+            </form>
+
+        </div>
+    
+    </div>
+
+</div>

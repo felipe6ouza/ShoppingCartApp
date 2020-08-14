@@ -9,7 +9,7 @@ namespace ShoppingCart.App.ViewModels
         [Key]
         public Guid Id { get; set; }
 
-        public IEnumerable<ItemPedidoViewModel> Itens { get; set; }
+        public List<ItemPedidoViewModel> Itens = new List<ItemPedidoViewModel>();
         public CadastroViewModel Cadastro { get; set; }
     }
 }

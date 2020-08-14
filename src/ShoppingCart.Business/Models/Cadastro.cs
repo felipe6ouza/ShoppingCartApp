@@ -20,5 +20,25 @@ namespace ShoppingCart.Business.Models
         /* EF Relations*/
         public IEnumerable<Pedido> Pedidos { get; set; }
 
+        public Cadastro()
+        {
+
+        }
+
+        internal void Update(Cadastro novoCadastro)
+        {
+            Email = novoCadastro.Email;
+            Nome = novoCadastro.Nome;
+            Telefone = novoCadastro.Telefone;
+            Logradouro = novoCadastro.Telefone;
+            Numero = novoCadastro.Numero;
+            Bairro = novoCadastro.Bairro;
+            Cep = novoCadastro.Cep;
+            Complemento = novoCadastro.Complemento;
+            Cidade = novoCadastro.Cidade;
+            Estado = novoCadastro.Estado;
+
+        }
+
     }
 }

@@ -12,6 +12,9 @@ namespace ShoppingCart.Business.Models
         public string Imagem { get; set; }
         public decimal Preco { get; set; }
 
+        public Produto()
+        {
 
+        }
     }
 }

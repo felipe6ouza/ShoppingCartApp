@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ShoppingCart.Business.Models
 {
@@ -11,11 +12,23 @@ namespace ShoppingCart.Business.Models
         public int Quantidade { get; set; }
         public decimal PrecoUnitario { get; set; }
 
-
         /* EF Relations*/
         public Pedido Pedido { get; set; }
         public Produto Produto { get; set; }
 
+        public ItemPedido(Pedido pedido, Produto produto, int quantidade)
+        {
+            ProdutoId = produto.Id;
+            PedidoId = pedido.Id;           
+            Quantidade = quantidade;
+            PrecoUnitario = produto.Preco;
 
+
+        }
+
+        public ItemPedido()
+        {
+
+        }
     }
 }
