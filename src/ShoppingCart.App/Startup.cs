@@ -45,7 +45,7 @@ namespace ShoppingCart.App
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.IdleTimeout = TimeSpan.FromDays(7);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });

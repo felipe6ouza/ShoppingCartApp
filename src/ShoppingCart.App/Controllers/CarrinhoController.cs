@@ -27,7 +27,18 @@ namespace ShoppingCart.App.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Carrinho(string Codigo)
+        public async Task<IActionResult> Index()
+        {
+            var pedido = await ObterPedido();
+            var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
+
+            var itens = _mapper.Map<List<ItemPedidoViewModel>>(itensPedido);
+            var carrinho = new CarrinhoViewModel(itens);
+
+            return View(carrinho);
+        }
+
+        public async Task<IActionResult> Adicionar(string Codigo)
         {
             var produto = await _produtoRespository.ObterPorCodigo(Codigo);
 
@@ -35,36 +46,31 @@ namespace ShoppingCart.App.Controllers
                 return NotFound();
 
             var pedido = await ObterPedido();
-          
-            var ItensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
-            
+            var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
 
-            foreach(var item in ItensPedido)
-            {
-                if (item.ProdutoId == produto.Id)
-                {
-                    item.Quantidade++;
-                    await _itemPedidoRepository.Atualizar(item);
-                }
-            }
 
-            int x = (from i in ItensPedido
-                     where i.ProdutoId == produto.Id
-                     select i).Count();
+            var produtoExistente = (from item in itensPedido
+                                    where item.Produto.Id.Equals(produto.Id)
+                                    select item).FirstOrDefault();
 
-            if (x == 0)
+            if (produtoExistente == null)
             {
                 var novoItem = new ItemPedido(pedido, produto, 1);
                 await _itemPedidoRepository.Adicionar(novoItem);
                 await _itemPedidoRepository.SaveChanges();
                 novoItem.Produto = produto;
-                ItensPedido.Add(novoItem);
+                itensPedido.Add(novoItem);
             }
-           
 
-            var itens = _mapper.Map<List<ItemPedidoViewModel>>(ItensPedido);
-            var carrinhoViewModel = new CarrinhoViewModel(itens);
-            return View("Index", carrinhoViewModel);
+            else
+            {
+                produtoExistente.Quantidade++;
+                await _itemPedidoRepository.Atualizar(produtoExistente);
+                await _itemPedidoRepository.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Index));
+
 
         }
 
@@ -86,7 +92,7 @@ namespace ShoppingCart.App.Controllers
                 InserirPedidoId(novoPedido.Id);
                 return novoPedido;
             }
-           
+
         }
 
         private Guid ObterPedidoId()

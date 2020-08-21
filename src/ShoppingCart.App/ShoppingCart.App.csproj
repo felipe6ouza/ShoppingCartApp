@@ -33,4 +33,11 @@
     <Folder Include="wwwroot\imgUploads\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Update="wwwroot\css\custom.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

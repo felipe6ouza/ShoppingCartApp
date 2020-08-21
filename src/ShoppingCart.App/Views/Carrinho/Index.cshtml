@@ -1,12 +1,12 @@
 ﻿@model ShoppingCart.App.ViewModels.CarrinhoViewModel
 
 <table class="table table-hover">
-    <thead class="thead-dark">
+    <thead class="thead-light">
         <tr>
             <th></th>
-            <th>Nome</th>
+            <th>Item</th>
             <th>Quantidade</th>
-            <th>Preço</th>
+            <th>Total</th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +28,21 @@
             </tr>   
         }
     </tbody>
-</table>
 
-<h2 class="text-right"> Total: @Model.Total</h2>
+    <tfoot>
+        <tr>
+            <td>
+                <button class="btn btn-danger" type="submit" name="checkout">Finalizar Pedido</button>
+            </td>
+            <td>
+
+            </td>
+
+            <td>
+               <a><i class="fas fa-sync-alt"></i></a>
+            </td>
+            <td>R$ @Model.Total</td>
+            
+        </tr>
+    </tfoot>
+</table>
