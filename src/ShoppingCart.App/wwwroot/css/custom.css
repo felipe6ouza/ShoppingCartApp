@@ -62,4 +62,33 @@ input, select, file, textarea {
 }
 .table td{
     max-width: 350px;
+
+}
+
+.table tbody td {
+    background-color: #f2f0ee;
+}
+
+.table-custom {
+    font-weight: bold;
+}
+
+.table-custom tbody {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.table-custom tbody input{
+    max-width:35px;  
+ }
+
+.border-custom {
+    background-color: #e4e1de;
+    font-family: 'Roboto Slab', serif;
+}
+
+.btn-checkout {
+    background-color: #fac459;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: small;
 }

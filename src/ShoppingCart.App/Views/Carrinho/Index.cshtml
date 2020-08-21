@@ -1,12 +1,13 @@
 ﻿@model ShoppingCart.App.ViewModels.CarrinhoViewModel
 
-<table class="table table-hover">
-    <thead class="thead-light">
+<table class="table table-hover table-custom">
+    <thead class="border-custom">
         <tr>
             <th></th>
             <th>Item</th>
             <th>Quantidade</th>
             <th>Total</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -20,29 +21,35 @@
                     @Html.DisplayFor(modelItem => item.Produto.Nome)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Quantidade)
+                    <input type="number" min="0" value="@Html.DisplayFor(modelItem => item.Quantidade)" />
                 </td>
                 <td>
                     @item.PrecoUnitario.ToString("C")
                 </td>
-            </tr>   
+                <td>
+                    <form method="post">
+                        <button class="btn" type="submit" asp-controller="Carrinho" asp-action="RemoverItem" asp-route-itemPedidoId="@item.Id"><span class="fas fa-trash-alt"></span></button>
+                    </form>
+                </td>
+
+            </tr>
+
         }
     </tbody>
 
-    <tfoot>
+    <tfoot class="border-custom">
         <tr>
             <td>
-                <button class="btn btn-danger" type="submit" name="checkout">Finalizar Pedido</button>
+                <a class="btn btn-checkout" name="checkout"><span class="fas fa-cart-plus"></span> Finalizar Pedido</a>
             </td>
             <td>
-
             </td>
 
             <td>
-               <a><i class="fas fa-sync-alt"></i></a>
+                <a><i class="fas fa-sync-alt"></i></a>
             </td>
             <td>R$ @Model.Total</td>
-            
+            <td></td>
         </tr>
     </tfoot>
 </table>

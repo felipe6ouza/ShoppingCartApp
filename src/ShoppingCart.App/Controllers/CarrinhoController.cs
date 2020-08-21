@@ -38,7 +38,7 @@ namespace ShoppingCart.App.Controllers
             return View(carrinho);
         }
 
-        public async Task<IActionResult> Adicionar(string Codigo)
+        public async Task<IActionResult> AdicionarItem(string Codigo)
         {
             var produto = await _produtoRespository.ObterPorCodigo(Codigo);
 
@@ -73,6 +73,16 @@ namespace ShoppingCart.App.Controllers
 
 
         }
+        [HttpPost]
+        public async Task<IActionResult> RemoverItem(Guid itemPedidoId)
+        {
+            var item = itemPedidoId;
+            await _itemPedidoRepository.Remover(itemPedidoId);
+            await _itemPedidoRepository.SaveChanges();
+            return RedirectToAction(nameof(Index));
+
+        }
+
 
         private async Task<Pedido> ObterPedido()
         {
