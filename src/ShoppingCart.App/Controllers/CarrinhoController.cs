@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ShoppingCart.App.ViewModels;
 using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Business.Models;
@@ -82,7 +83,29 @@ namespace ShoppingCart.App.Controllers
             return RedirectToAction(nameof(Index));
 
         }
+        
+        [HttpPost]
+        public async Task<IActionResult> AtualizarItemCarrinho([FromBody]object response)
+        {
+            var responseString = response.ToString();
+            AlterarQuantidade alterarQuantidade = JsonConvert.DeserializeObject<AlterarQuantidade>(responseString);
 
+            var pedido = await ObterPedido();
+            var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
+
+            foreach(var item in itensPedido)
+            {
+                if(item.Produto.Codigo == alterarQuantidade.Codigo)
+                {
+                    item.Quantidade = alterarQuantidade.Quantidade;
+                    await _itemPedidoRepository.Atualizar(item);
+                    break;
+                }
+            }
+
+
+            return RedirectToAction(nameof(Index));
+        }
 
         private async Task<Pedido> ObterPedido()
         {

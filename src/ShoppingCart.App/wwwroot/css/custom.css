@@ -6,10 +6,18 @@ a.navbar-brand {
     word-break: break-all;
 }
 
-a {
-    text-decoration: none;
+header {
+    background-color: #ffaa60;
 }
 
+a {
+    text-decoration: none;
+    color:white;
+}
+
+a:hover{
+    color:white;
+}
 
 html {
     font-size: 14px;
@@ -92,3 +100,42 @@ input, select, file, textarea {
     text-transform: uppercase;
     font-size: small;
 }
+
+.input-group {
+  
+}
+
+.quantidade-conjunto {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+}
+
+.carrinho-titulo {
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.carrinho-container {
+    margin-top: 60px;
+}
+
+.catalogo-container {
+    margin-top: 60px;
+}
+
+.navbar{
+    height:90px;
+}
+
+.text-custom {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 18px;
+    font-weight:bold;
+   
+}
+
+.produto-container{
+    margin-top: 60px;
+} 
