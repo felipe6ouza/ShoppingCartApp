@@ -15,8 +15,10 @@ a {
     color:white;
 }
 
-a:hover{
-    color:white;
+
+a:hover {
+    color: white;
+    text-decoration:none;
 }
 
 html {
@@ -138,4 +140,15 @@ input, select, file, textarea {
 
 .produto-container{
     margin-top: 60px;
-} 
+}
+
+.cart-empty-link {
+    color: black;
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.cart-empty-link:hover {
+    color: black;
+    text-decoration: underline;
+}

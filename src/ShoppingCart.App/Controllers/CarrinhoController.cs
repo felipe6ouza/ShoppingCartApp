@@ -83,25 +83,33 @@ namespace ShoppingCart.App.Controllers
             return RedirectToAction(nameof(Index));
 
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> AtualizarItemCarrinho([FromBody]object response)
+        public async Task<IActionResult> AtualizarItemCarrinho([FromBody] object response)
         {
             var responseString = response.ToString();
             AlterarQuantidade alterarQuantidade = JsonConvert.DeserializeObject<AlterarQuantidade>(responseString);
 
+            if (alterarQuantidade.Quantidade < 1)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             var pedido = await ObterPedido();
             var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
 
-            foreach(var item in itensPedido)
+
+
+            foreach (var item in itensPedido)
             {
-                if(item.Produto.Codigo == alterarQuantidade.Codigo)
+                if (item.Produto.Nome == alterarQuantidade.Nome)
                 {
                     item.Quantidade = alterarQuantidade.Quantidade;
                     await _itemPedidoRepository.Atualizar(item);
                     break;
                 }
             }
+
 
 
             return RedirectToAction(nameof(Index));

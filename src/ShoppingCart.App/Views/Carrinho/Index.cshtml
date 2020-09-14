@@ -3,76 +3,79 @@
         <h3 class="carrinho-titulo">Seu carrinho</h3>
         <hr />
 
-        <table class="table table-hover table-custom">
-            <thead class="border-custom">
-                <tr>
-                    <th></th>
-                    <th>Código</th>
-                    <th>Item</th>
-                    <th>Quantidade</th>
-                    <th>Total</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="carrinho">
-                @foreach (var item in Model.Itens)
-                {
+        @if (Model.Itens.Count > 0)
+        {
+            <table class="table table-hover table-custom">
+                <thead class="border-custom">
+                    <tr>
+                        <th></th>
+                        <th>Item</th>
+                        <th>Quantidade</th>
+                        <th>Total</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Itens)
+                    {
+                        <tr>
+                            <td>
+                                <img style="max-width: 100px; max-height: 70px" src="~/imgUploads/@item.Produto.Imagem" alt="Imagem do Produto" />
+                            </td>
+                           
+                            <td class="produto-nome">
+                                @Html.DisplayFor(modelItem => item.Produto.Nome)
+                            </td>
+                            <td>
+                                <div class="quantidade-conjunto">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default click-decremento" onclick="carrinho.clickDecremento(this)">
+                                            <span class="fas fa-minus"></span>
+                                        </button>
+                                    </span>
+
+                                    <span class="valor-quantidade">@item.Quantidade</span>
+
+
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default click-incremento" onclick="carrinho.clickIncremento(this)">
+                                            <span class="fas fa-plus"></span>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="produto-preco">
+                                @item.PrecoUnitario.ToString("C")
+                            </td>
+                            <td>
+                                <form method="post">
+                                    <button class="btn" type="submit" asp-controller="Carrinho" asp-action="RemoverItem" asp-route-itemPedidoId="@item.Id"><span class="fas fa-trash-alt"></span></button>
+                                </form>
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+
+                <tfoot class="border-custom">
                     <tr>
                         <td>
-                            <img style="max-width: 100px; max-height: 70px" src="~/imgUploads/@item.Produto.Imagem" alt="Imagem do Produto" />
+                            <a class="btn btn-checkout" name="checkout"><span class="fas fa-cart-plus"></span> Finalizar Pedido</a>
                         </td>
-                        <td class="produto-codigo">
-                            @Html.DisplayFor(modelItem => item.Produto.Codigo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Produto.Nome)
-                        </td>
-                        <td>
-                            <div class="quantidade-conjunto">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default click-decremento" onclick="carrinho.clickDecremento(this)">
-                                        <span class="fas fa-minus"></span>
-                                    </button>
-                                </span>
-
-                                <span class="valor-quantidade">@item.Quantidade</span>
-
-
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default click-incremento" onclick="carrinho.clickIncremento(this)">
-                                        <span class="fas fa-plus"></span>
-                                    </button>
-                                </span>
-                            </div>
-                        </td>
-                        <td class="produto-preco">
-                            @item.PrecoUnitario.ToString("C")
-                        </td>
-                        <td>
-                            <form method="post">
-                                <button class="btn" type="submit" asp-controller="Carrinho" asp-action="RemoverItem" asp-route-itemPedidoId="@item.Id"><span class="fas fa-trash-alt"></span></button>
-                            </form>
-                        </td>
-
+                        <td></td>
+                        <td></td>
+                        <td id="valorTotal">R$ @Model.Total</td>
+                        <td></td>
                     </tr>
+                </tfoot>
+            </table>
+        }
 
-                }
-            </tbody>
-
-            <tfoot class="border-custom">
-                <tr>
-                    <td>
-                        <a class="btn btn-checkout" name="checkout"><span class="fas fa-cart-plus"></span> Finalizar Pedido</a>
-                    </td>
-                    <td>
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td id="valorTotal">R$ @Model.Total</td>
-                    <td></td>
-                </tr>
-            </tfoot>
-        </table>
+        else
+        {
+            <p>Seu carrinho de compras ainda está vazio? <a href="/" class="cart-empty-link"> Dê uma olhada nos jogos disponíveis. </a> </p>
+        }
 
 
     </div>

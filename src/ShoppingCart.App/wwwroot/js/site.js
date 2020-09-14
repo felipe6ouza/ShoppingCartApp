@@ -5,7 +5,7 @@
         this.postQuantidade(data);
 
         if (data.Quantidade == 2) {
-            $(button).parents('.quantidade-conjunto').children('.click-decremento').removeAttr("disabled");
+            $(button).parents('.quantidade-conjunto').children('.input-group-btn').children('.click-decremento').attr("disabled", false);
         }
 
         $(button).parents('.quantidade-conjunto').children('.valor-quantidade').text(data.Quantidade);
@@ -14,11 +14,16 @@
 
     clickDecremento(button) {
         let data = this.getData(button);
-        
+
+
         if (data.Quantidade > 1) {
             data.Quantidade--;
             this.postQuantidade(data);
 
+            if (data.Quantidade == 1) {
+                $(button).attr("disabled", true);
+
+            }
         }
 
         $(button).parents('.quantidade-conjunto').children('.valor-quantidade').text(data.Quantidade);
@@ -28,11 +33,13 @@
 
     getData(elemento) {
         let quantidade = $(elemento).parents('.quantidade-conjunto').children('.valor-quantidade').text();
-        let codigo = $(elemento).parents('.quantidade-conjunto').parent().parent().children('.produto-codigo').text();
-        codigo = codigo.trim();
+        let nome = $(elemento).parents('.quantidade-conjunto').parent().parent().children('.produto-nome').text();
+        nome = nome.trim();
+
+
 
         return {
-            Codigo: codigo,
+            Nome: nome,
             Quantidade: quantidade,
         };
     }
@@ -51,6 +58,7 @@
             data: JSON.stringify(data),
 
         }).done(function () {
+
             let final = 0.0;
             let total = 0;
             let precos = $(".produto-preco");
@@ -82,3 +90,4 @@
 }
 
 var carrinho = new Carrinho();
+
