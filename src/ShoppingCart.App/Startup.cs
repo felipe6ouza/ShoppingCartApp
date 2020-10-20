@@ -13,6 +13,8 @@ using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Data.Repository;
 using AutoMapper;
 using System;
+using ShoppingCart.Business.Notificacoes;
+using ShoppingCart.Business.Services;
 
 namespace ShoppingCart.App
 {
@@ -45,7 +47,7 @@ namespace ShoppingCart.App
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromDays(7);
+                options.IdleTimeout = TimeSpan.FromMinutes(1);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -59,10 +61,11 @@ namespace ShoppingCart.App
             services.AddScoped<IPedidoRepository, PedidoRepository>();
             services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor();>
 
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddScoped<INotificador, Notificador>();
+            services.AddScoped<IProdutoService, ProdutoService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
@@ -81,11 +84,10 @@ namespace ShoppingCart.App
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            app.UseSession();
             app.UseAuthentication();
 
             app.UseMvc(routes =>

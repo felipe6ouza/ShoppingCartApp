@@ -20,7 +20,7 @@ namespace ShoppingCart.App.Controllers
         private readonly IMapper _mapper;
 
         public CarrinhoController(IProdutoRepository produtoRespository,
-            IItemPedidoRepository itemPedidoRepository, IMapper mapper, IPedidoRepository pedidoRepository)
+            IItemPedidoRepository itemPedidoRepository, IMapper mapper, IPedidoRepository pedidoRepository, INotificador notificador):base(notificador)
         {
             _produtoRespository = produtoRespository;
             _itemPedidoRepository = itemPedidoRepository;
@@ -31,10 +31,10 @@ namespace ShoppingCart.App.Controllers
         public async Task<IActionResult> Index()
         {
             var pedido = await ObterPedido();
-            var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
 
-            var itens = _mapper.Map<List<ItemPedidoViewModel>>(itensPedido);
-            var carrinho = new CarrinhoViewModel(itens);
+            var itensPedido = _mapper.Map<List<ItemPedidoViewModel>>(pedido.Itens);
+
+            var carrinho = new CarrinhoViewModel(itensPedido);
 
             return View(carrinho);
         }
@@ -119,48 +119,34 @@ namespace ShoppingCart.App.Controllers
         {
             var pedidoId = ObterPedidoId();
 
-            var pedido = await _pedidoRepository.ObterPorId(pedidoId);
-
-            if (pedido != null)
-            {
-                return pedido;
-            }
-            else
+            if(pedidoId == Guid.Empty)
             {
                 var novoPedido = new Pedido();
                 await _pedidoRepository.Adicionar(novoPedido);
-                await _pedidoRepository.SaveChanges();
-                InserirPedidoId(novoPedido.Id);
+                InserirSessionPedidoId(novoPedido.Id);
                 return novoPedido;
             }
+
+            var pedido = await _pedidoRepository.ObterDadosPedido(pedidoId);
+            return pedido;
 
         }
 
         private Guid ObterPedidoId()
         {
-            byte[] productIdSession = null;
 
-            try
+            var pedidoIdSession = HttpContext.Session.GetString("pedidoId");
+    
+            if (string.IsNullOrEmpty(pedidoIdSession))
             {
-                productIdSession = HttpContext.Session.Get("pedidoId");
+                return Guid.Empty;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            if (productIdSession != null)
-            {
-                Guid pedidoIdSession = new Guid(productIdSession);
-                return pedidoIdSession;
-            }
-
-            return Guid.NewGuid();
+            return Guid.Parse(pedidoIdSession);
 
         }
-        private void InserirPedidoId(Guid pedidoId)
+        private void InserirSessionPedidoId(Guid pedidoId)
         {
-            HttpContext.Session.Set("pedidoId", pedidoId.ToByteArray());
+            HttpContext.Session.SetString("pedidoId", pedidoId.ToString());
         }
 
     }

@@ -12,71 +12,39 @@ namespace ShoppingCart.App.ViewComponents
     [ViewComponent(Name = "Carrinho")]
     public class CarrinhoViewComponent : ViewComponent
     {
-        private readonly IItemPedidoRepository _itemPedidoRepository;
         private readonly IPedidoRepository _pedidoRepository;
 
-        public CarrinhoViewComponent(IItemPedidoRepository itemPedidoRepository, IPedidoRepository pedidoRepository)
+        public CarrinhoViewComponent(IPedidoRepository pedidoRepository)
         {
-            _itemPedidoRepository = itemPedidoRepository;
             _pedidoRepository = pedidoRepository;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var pedido = await ObterPedido();
-            var Itens = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
-
-            int ItensCarrinho = Itens.Count();
-            
-            return View(ItensCarrinho);
-        }
-
-        private async Task<Pedido> ObterPedido()
-        {
             var pedidoId = ObterPedidoId();
 
-            var pedido = await _pedidoRepository.ObterPorId(pedidoId);
+            int ItensCarrinho = 0;
 
-            if (pedido != null)
+            if (pedidoId != Guid.Empty)
             {
-                return pedido;
-            }
-            else
-            {
-                var novoPedido = new Pedido();
-                await _pedidoRepository.Adicionar(novoPedido);
-                await _pedidoRepository.SaveChanges();
-                InserirPedidoId(novoPedido.Id);
-                return novoPedido;
+                var pedido = await _pedidoRepository.ObterDadosPedido(pedidoId);
+                ItensCarrinho = pedido.Itens.Count();
             }
 
+            return View(ItensCarrinho);
         }
 
         private Guid ObterPedidoId()
         {
-            byte[] productIdSession = null;
 
-            try
-            {
-                productIdSession = HttpContext.Session.Get("pedidoId");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            var pedidoIdSession = HttpContext.Session.GetString("pedidoId");
 
-            if (productIdSession != null)
+            if (string.IsNullOrEmpty(pedidoIdSession))
             {
-                Guid pedidoIdSession = new Guid(productIdSession);
-                return pedidoIdSession;
+                return Guid.Empty;
             }
-
-            return Guid.NewGuid();
+            return Guid.Parse(pedidoIdSession);
 
         }
-        private void InserirPedidoId(Guid pedidoId)
-        {
-            HttpContext.Session.Set("pedidoId", pedidoId.ToByteArray());
-        }
-
+      
     }
 }
