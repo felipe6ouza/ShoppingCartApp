@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using ShoppingCart.App.ViewModels;
 using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Business.Models;
@@ -14,17 +13,18 @@ namespace ShoppingCart.App.Controllers
 {
     public class CarrinhoController : BaseController
     {
-        private readonly IProdutoRepository _produtoRespository;
         private readonly IItemPedidoRepository _itemPedidoRepository;
         private readonly IPedidoRepository _pedidoRepository;
+        private readonly IProdutoRepository _produtoRepository;
         private readonly IMapper _mapper;
 
-        public CarrinhoController(IProdutoRepository produtoRespository,
-            IItemPedidoRepository itemPedidoRepository, IMapper mapper, IPedidoRepository pedidoRepository, INotificador notificador):base(notificador)
+        public CarrinhoController(IPedidoRepository pedidoRepository, IItemPedidoRepository itemPedidoRepository,
+            IProdutoRepository produtoRepository,
+            IMapper mapper, INotificador notificador):base(notificador)
         {
-            _produtoRespository = produtoRespository;
             _itemPedidoRepository = itemPedidoRepository;
             _pedidoRepository = pedidoRepository;
+            _produtoRepository = produtoRepository;
             _mapper = mapper;
         }
 
@@ -41,43 +41,48 @@ namespace ShoppingCart.App.Controllers
 
         public async Task<IActionResult> AdicionarItem(string Codigo)
         {
-            var produto = await _produtoRespository.ObterPorCodigo(Codigo);
+            var produto = await _produtoRepository.ObterPorCodigo(Codigo);
 
             if (produto == null)
                 return NotFound();
 
             var pedido = await ObterPedido();
-            var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
 
 
-            var produtoExistente = (from item in itensPedido
-                                    where item.Produto.Id.Equals(produto.Id)
-                                    select item).FirstOrDefault();
-
-            if (produtoExistente == null)
+            if (pedido.Itens == null)
             {
-                var novoItem = new ItemPedido(pedido, produto, 1);
-                await _itemPedidoRepository.Adicionar(novoItem);
-                await _itemPedidoRepository.SaveChanges();
-                novoItem.Produto = produto;
-                itensPedido.Add(novoItem);
+                var novoItemPedido = new ItemPedido(pedido, produto, 1);
+                await _itemPedidoRepository.Adicionar(novoItemPedido);
+                novoItemPedido.Produto = produto;
+                pedido.Itens.Add(novoItemPedido);
+                
+                return RedirectToAction(nameof(Index));
+            }
+
+            var ItemNoCarrinho = pedido.Itens.Where(c => c.ProdutoId.Equals(produto.Id)).FirstOrDefault();
+
+
+            if (ItemNoCarrinho != null)
+            {
+                ItemNoCarrinho.Quantidade++;
+                await _itemPedidoRepository.Atualizar(ItemNoCarrinho);
             }
 
             else
             {
-                produtoExistente.Quantidade++;
-                await _itemPedidoRepository.Atualizar(produtoExistente);
-                await _itemPedidoRepository.SaveChanges();
+                var novoItemCarrinho = new ItemPedido(pedido, produto, 1);
+                await _itemPedidoRepository.Adicionar(novoItemCarrinho);
+                pedido.Itens.Add(novoItemCarrinho);
             }
 
             return RedirectToAction(nameof(Index));
 
 
         }
+        
         [HttpPost]
         public async Task<IActionResult> RemoverItem(Guid itemPedidoId)
         {
-            var item = itemPedidoId;
             await _itemPedidoRepository.Remover(itemPedidoId);
             await _itemPedidoRepository.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -85,31 +90,25 @@ namespace ShoppingCart.App.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AtualizarItemCarrinho([FromBody] object response)
-        {
-            var responseString = response.ToString();
-            AlterarQuantidade alterarQuantidade = JsonConvert.DeserializeObject<AlterarQuantidade>(responseString);
+        public async Task<IActionResult> AtualizarQuantidade([FromBody] AlterarQuantidadeItemPedido dadosAlteracao)
+        { 
 
-            if (alterarQuantidade.Quantidade < 1)
+            if (dadosAlteracao.Quantidade < 1)
             {
                 return RedirectToAction(nameof(Index));
             }
 
             var pedido = await ObterPedido();
-            var itensPedido = await _itemPedidoRepository.ObterItensPedido(pedido.Id);
 
-
-
-            foreach (var item in itensPedido)
+            foreach (var item in pedido.Itens)
             {
-                if (item.Produto.Nome == alterarQuantidade.Nome)
+                if (item.Produto.Nome.Equals(dadosAlteracao.Nome))
                 {
-                    item.Quantidade = alterarQuantidade.Quantidade;
+                    item.Quantidade = dadosAlteracao.Quantidade;
                     await _itemPedidoRepository.Atualizar(item);
                     break;
                 }
             }
-
 
 
             return RedirectToAction(nameof(Index));
