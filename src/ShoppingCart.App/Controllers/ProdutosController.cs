@@ -16,15 +16,23 @@ namespace ShoppingCart.App.Controllers
     {
         private readonly IMapper _mapper;
         private readonly IProdutoRepository _produtoRepository;
-        public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper)
+        private readonly IProdutoService _produtoService;
+        public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper, IProdutoService produtoService,
+            INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
+            _produtoService = produtoService;
             _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterTodos()));
+        }
+
+        public IActionResult Sobre()
+        {
+            return View();
         }
 
 
@@ -71,7 +79,9 @@ namespace ShoppingCart.App.Controllers
             produtoViewModel.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
             
             var produto = _mapper.Map<Produto>(produtoViewModel);
-            await _produtoRepository.Adicionar(produto);
+            await _produtoService.Adicionar(produto);
+
+            if (!OperacaoValida()) return View(produtoViewModel);
 
             return RedirectToAction(nameof(Index));
 
@@ -100,24 +110,12 @@ namespace ShoppingCart.App.Controllers
 
             if (!ModelState.IsValid) return View(produtoViewModel);
 
-            try
-            {
-                var produto = _mapper.Map<Produto>(produtoViewModel);
-                await _produtoRepository.Atualizar(produto);
-                await _produtoRepository.SaveChanges();
+            var produto = _mapper.Map<Produto>(produtoViewModel);
+            await _produtoService.Atualizar(produto);
 
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!await ProdutoExists(produtoViewModel.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+              if (!OperacaoValida()) return View(produtoViewModel);
+
+          
 
             return RedirectToAction(nameof(Index));
         }
@@ -137,8 +135,16 @@ namespace ShoppingCart.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            await _produtoRepository.Remover(id);
-            await _produtoRepository.SaveChanges();
+            var produtoViewModel = await ObterProdutoViewModelPorId(id);
+
+            if(produtoViewModel == null)
+            {
+                return NotFound();
+            }
+
+            await _produtoService.Remover(id);
+            if (!OperacaoValida()) return View(produtoViewModel);
+
 
             return RedirectToAction(nameof(Index));
         }

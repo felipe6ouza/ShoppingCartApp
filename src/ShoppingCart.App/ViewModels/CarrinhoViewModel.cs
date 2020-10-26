@@ -7,7 +7,16 @@ namespace ShoppingCart.App.ViewModels
 {
     public class CarrinhoViewModel
     {
-        public IList<ItemPedidoViewModel> Itens { get; private set; }
+        public List<ItemPedidoViewModel> Itens = null;
+
+        public decimal ItensQuantidade
+        {
+            get
+            {
+                return Itens != null ? Itens.Count  : 0;
+            }
+        }
+
         public decimal Total
         {
             get
@@ -16,9 +25,10 @@ namespace ShoppingCart.App.ViewModels
             }
         }
 
-        public CarrinhoViewModel(IList<ItemPedidoViewModel> itens)
+        public CarrinhoViewModel(List<ItemPedidoViewModel> itens)
         {
             Itens = itens;
         }
+        
     }
 }

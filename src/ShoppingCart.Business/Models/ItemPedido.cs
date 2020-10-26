@@ -22,8 +22,7 @@ namespace ShoppingCart.Business.Models
             PedidoId = pedido.Id;           
             Quantidade = quantidade;
             PrecoUnitario = produto.Preco;
-
-
+         
         }
 
         public ItemPedido()

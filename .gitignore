@@ -24,6 +24,5 @@ bld/
 [Ll]og/
 
 .vs/
-
-src/ShoppingCart.App/wwwroot/images/
-src/ShoppingCart.App/wwwroot/imgUploads/
+/src/ShoppingCart.App/wwwroot/images
+/src/ShoppingCart.App/wwwroot/imgUploads

@@ -16,7 +16,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggle table-sm  border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" style="width:30px; margin-right:5px;"/>Avocato.App</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Produtos" asp-action="Catalogo"><img src="~/images/logo.png" style="width:30px; margin-right:5px;" />Avocato.App</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -24,17 +24,15 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-custom text-white" asp-area="" asp-controller="Produtos" asp-action="Catalogo">Home</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-custom text-white" asp-area="" asp-controller="Produtos" asp-action="Create">Novo Produto</a>
                         </li>
-
                         <li class="nav-item">
-                            <a class="nav-link text-custom text-white" asp-area="" asp-controller="Carrinho" asp-action="Index">Carrinho</a>
+                            <a class="nav-link text-custom text-white" asp-area="" asp-controller="Produtos" asp-action="Sobre">Sobre</a>
                         </li>
                     </ul>
                 </div>
+                <vc:carrinho></vc:carrinho>
+
             </div>
         </nav>
     </header>
