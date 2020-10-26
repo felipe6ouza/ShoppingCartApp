@@ -5,8 +5,12 @@
     @foreach (var item in Model)
     {
         <div class="col-md-3 col-sm-3 col-lg-3" style="margin-bottom:40px;">
-            <div class="card" style="width: 14rem;">
-                <img src="~/imgUploads/@item.Imagem" class="card-img-top">
+            <div class="card" style="max-width: 14rem;">
+                <div class="card-header">
+                    <img src="~/imgUploads/@item.Imagem" class="card-img-top img-fluid">
+                </div>
+               
+                
                 <div class="card-body">
                     <h5 class="card-title">@item.Nome</h5>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-success">Comprar</a>

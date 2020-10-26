@@ -152,3 +152,12 @@ input, select, file, textarea {
     color: black;
     text-decoration: underline;
 }
+
+.card-img-top{
+    max-width: 180px;
+    height: auto;
+}
+
+.card-header{
+    background-color: white;
+}

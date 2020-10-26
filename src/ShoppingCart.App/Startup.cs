@@ -1,20 +1,14 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShoppingCart.App.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShoppingCart.Data.Context;
-using ShoppingCart.Business.Interfaces;
-using ShoppingCart.Data.Repository;
 using AutoMapper;
 using System;
-using ShoppingCart.Business.Notificacoes;
-using ShoppingCart.Business.Services;
+using ShoppingCart.App.Configurations;
+using Microsoft.Extensions.Hosting;
 
 namespace ShoppingCart.App
 {
@@ -40,8 +34,6 @@ namespace ShoppingCart.App
             services.AddDbContext<ShoppingCartDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDistributedMemoryCache();
 
@@ -52,31 +44,21 @@ namespace ShoppingCart.App
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddScoped<ShoppingCartDbContext>();
-            services.AddScoped<ICadastroRepository, CadastroRepository>();
-            services.AddScoped<IPedidoRepository, PedidoRepository>();
-            services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();
-            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.ResolveDependencies();
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddScoped<INotificador, Notificador>();
-            services.AddScoped<IProdutoService, ProdutoService>();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -90,11 +72,15 @@ namespace ShoppingCart.App
             app.UseCookiePolicy();
             app.UseAuthentication();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Produtos}/{action=Catalogo}/{id?}");
+
+                endpoints.MapControllerRoute(
+                        name: "default",
+                        pattern: "{controller=Produtos}/{action=Catalogo}");
+                endpoints.MapRazorPages();
             });
         }
     }
