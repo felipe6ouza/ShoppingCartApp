@@ -23,4 +23,8 @@
     <ProjectReference Include="..\ShoppingCart.Business\ShoppingCart.Business.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

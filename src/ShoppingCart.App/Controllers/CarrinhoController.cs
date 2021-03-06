@@ -39,7 +39,7 @@ namespace ShoppingCart.App.Controllers
             return View(carrinho);
         }
 
-        public async Task<IActionResult> AdicionarItem(string Codigo)
+        public async Task<IActionResult> AdicionarItem(int Codigo)
         {
             var produto = await _produtoRepository.ObterPorCodigo(Codigo);
 

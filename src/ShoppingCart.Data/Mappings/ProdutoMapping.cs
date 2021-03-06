@@ -16,15 +16,16 @@ namespace ShoppingCart.Data.Mappings
 
             builder.Property(p => p.Descricao)
                .IsRequired()
-               .HasColumnType("varchar(500)");
+               .HasColumnType("varchar(1000)");
 
             builder.Property(p => p.Imagem)
                 .IsRequired()
                 .HasColumnType("varchar(max)");
 
             builder.Property(p => p.Codigo)
-                .IsRequired()
-                .HasColumnType("varchar(250)");
+                .ValueGeneratedOnAdd();
+
+
 
             builder.ToTable("Produtos");
         }

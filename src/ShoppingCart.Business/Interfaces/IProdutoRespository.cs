@@ -8,6 +8,6 @@ namespace ShoppingCart.Business.Interfaces
 {
     public interface IProdutoRepository : IRepository<Produto>
     {
-       Task<Produto> ObterPorCodigo(string Codigo);
+       Task<Produto> ObterPorCodigo(int Codigo);
     }
 }

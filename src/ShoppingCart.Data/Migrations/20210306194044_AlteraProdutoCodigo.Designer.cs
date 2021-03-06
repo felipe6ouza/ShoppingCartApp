@@ -10,58 +10,51 @@ using ShoppingCart.Data.Context;
 namespace ShoppingCart.Data.Migrations
 {
     [DbContext(typeof(ShoppingCartDbContext))]
-    [Migration("20200810185806_Initial")]
-    partial class Initial
+    [Migration("20210306194044_AlteraProdutoCodigo")]
+    partial class AlteraProdutoCodigo
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
+                .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("ShoppingCart.Business.Models.Cadastro", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Bairro");
+                    b.Property<string>("Bairro")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Cep")
-                        .IsRequired()
                         .HasColumnType("varchar(8)");
 
                     b.Property<string>("Cidade")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Complemento")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Estado")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Logradouro")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Nome")
-                        .IsRequired()
                         .HasColumnType("varchar(250)");
 
                     b.Property<string>("Numero")
-                        .IsRequired()
                         .HasColumnType("varchar(8)");
 
                     b.Property<string>("Telefone")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
@@ -72,15 +65,20 @@ namespace ShoppingCart.Data.Migrations
             modelBuilder.Entity("ShoppingCart.Business.Models.ItemPedido", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("PedidoId");
+                    b.Property<Guid>("PedidoId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("PrecoUnitario");
+                    b.Property<decimal>("PrecoUnitario")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("ProdutoId");
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Quantidade");
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -94,9 +92,11 @@ namespace ShoppingCart.Data.Migrations
             modelBuilder.Entity("ShoppingCart.Business.Models.Pedido", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CadastroId");
+                    b.Property<Guid>("CadastroId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -108,15 +108,17 @@ namespace ShoppingCart.Data.Migrations
             modelBuilder.Entity("ShoppingCart.Business.Models.Produto", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Codigo")
-                        .IsRequired()
-                        .HasColumnType("varchar(250)");
+                    b.Property<int>("Codigo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("varchar(500)");
+                        .HasColumnType("varchar(1000)");
 
                     b.Property<string>("Imagem")
                         .IsRequired()
@@ -126,7 +128,8 @@ namespace ShoppingCart.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(250)");
 
-                    b.Property<decimal>("Preco");
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -138,12 +141,18 @@ namespace ShoppingCart.Data.Migrations
                     b.HasOne("ShoppingCart.Business.Models.Pedido", "Pedido")
                         .WithMany("Itens")
                         .HasForeignKey("PedidoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ShoppingCart.Business.Models.Produto", "Produto")
                         .WithMany()
                         .HasForeignKey("ProdutoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
+
+                    b.Navigation("Produto");
                 });
 
             modelBuilder.Entity("ShoppingCart.Business.Models.Pedido", b =>
@@ -151,7 +160,20 @@ namespace ShoppingCart.Data.Migrations
                     b.HasOne("ShoppingCart.Business.Models.Cadastro", "Cadastro")
                         .WithMany("Pedidos")
                         .HasForeignKey("CadastroId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cadastro");
+                });
+
+            modelBuilder.Entity("ShoppingCart.Business.Models.Cadastro", b =>
+                {
+                    b.Navigation("Pedidos");
+                });
+
+            modelBuilder.Entity("ShoppingCart.Business.Models.Pedido", b =>
+                {
+                    b.Navigation("Itens");
                 });
 #pragma warning restore 612, 618
         }

@@ -13,7 +13,7 @@ namespace ShoppingCart.Data.Repository
     {
         public ProdutoRepository(ShoppingCartDbContext context): base(context) { }
 
-        public async Task<Produto> ObterPorCodigo(string Codigo)
+        public async Task<Produto> ObterPorCodigo(int Codigo)
         {
             return await Db.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.Codigo == Codigo);
         }

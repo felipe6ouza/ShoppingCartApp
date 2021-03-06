@@ -14,11 +14,7 @@ namespace ShoppingCart.App.ViewModels
         [DisplayName("Upload de Imagem")]
         public IFormFile ImagemUpload { get; set; }
         public string Imagem { get; set; }
-
-        [DisplayName("Código")]
-        [Required(ErrorMessage = "O campo é {0} obrigatório")]
-        [StringLength(250, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
-        public string Codigo { get; set; }
+        public int Codigo { get; private set; }
 
         [Required(ErrorMessage = "O campo é {0} obrigatório")]
         [StringLength(250, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
