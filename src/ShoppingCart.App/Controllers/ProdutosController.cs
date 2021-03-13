@@ -14,15 +14,13 @@ namespace ShoppingCart.App.Controllers
 {
     public class ProdutosController : BaseController
     {
-        private readonly IMapper _mapper;
         private readonly IProdutoRepository _produtoRepository;
         private readonly IProdutoService _produtoService;
         public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper, IProdutoService produtoService,
-            INotificador notificador) : base(notificador)
+            INotificador notificador) : base(notificador, mapper)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
-            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()

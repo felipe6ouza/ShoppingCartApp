@@ -14,9 +14,13 @@ namespace ShoppingCart.Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(250)");
 
+            builder.Property(p => p.Preco)
+                .IsRequired().HasPrecision(10, 2);
+                
+
             builder.Property(p => p.Descricao)
                .IsRequired()
-               .HasColumnType("varchar(1000)");
+               .HasColumnType("varchar(4000)");
 
             builder.Property(p => p.Imagem)
                 .IsRequired()
@@ -24,8 +28,6 @@ namespace ShoppingCart.Data.Mappings
 
             builder.Property(p => p.Codigo)
                 .ValueGeneratedOnAdd();
-
-
 
             builder.ToTable("Produtos");
         }

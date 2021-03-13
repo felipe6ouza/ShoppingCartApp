@@ -10,9 +10,10 @@ namespace ShoppingCart.Data.Mappings
         {
             builder.HasKey(p => p.Id);
 
-            // N => 1 Itempedido : Produto
+            builder.Property(p => p.PrecoUnitario)
+               .IsRequired().HasPrecision(10, 2);
 
-            builder.HasOne(i => i.Produto).WithMany();
+            builder.HasOne(i => i.Produto).WithOne();
 
             builder.ToTable("ItemPedidos");
         }

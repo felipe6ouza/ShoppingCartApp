@@ -10,10 +10,13 @@ namespace ShoppingCart.Data.Mappings
         {
             builder.HasKey(p => p.Id);
 
-            /*  1 : N Pedido => ItemPedido */
+            builder.Property(p => p.Finalizado)
+            .HasDefaultValue(false);
 
-            builder.HasMany(p => p.Itens).WithOne(p => p.Pedido)
-                .HasForeignKey(p => p.PedidoId);
+            builder.HasOne(c => c.Cadastro)
+                .WithMany(p => p.Pedidos)
+                .HasForeignKey(c => c.CadastroId);
+
 
             builder.ToTable("Pedidos");
         }

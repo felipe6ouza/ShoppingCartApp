@@ -11,5 +11,8 @@ namespace ShoppingCart.App.ViewModels
 
         public List<ItemPedidoViewModel> Itens = new List<ItemPedidoViewModel>();
         public CadastroViewModel Cadastro { get; set; }
+
+        public bool Finalizado { get; set; }
+
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ShoppingCart.Business.Models
 {
     public class Pedido : Entity
     {
-        public Guid CadastroId { get; set; }
+        public Guid? CadastroId { get; set; }
+        public bool Finalizado { get; set; }
 
         /* EF Relations*/
         public ICollection<ItemPedido> Itens { get; set; }
@@ -14,8 +14,6 @@ namespace ShoppingCart.Business.Models
 
         public Pedido()
         {
-            Cadastro = new Cadastro();
-            CadastroId = Cadastro.Id;
         }
         public Pedido(Cadastro cadastro)
         {

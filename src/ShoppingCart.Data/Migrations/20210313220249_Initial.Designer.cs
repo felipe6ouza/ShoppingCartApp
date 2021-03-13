@@ -10,8 +10,8 @@ using ShoppingCart.Data.Context;
 namespace ShoppingCart.Data.Migrations
 {
     [DbContext(typeof(ShoppingCartDbContext))]
-    [Migration("20210306194044_AlteraProdutoCodigo")]
-    partial class AlteraProdutoCodigo
+    [Migration("20210313220249_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,45 +21,91 @@ namespace ShoppingCart.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CadastroEndereco", b =>
+                {
+                    b.Property<Guid>("CadastrosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EnderecosId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CadastrosId", "EnderecosId");
+
+                    b.HasIndex("EnderecosId");
+
+                    b.ToTable("CadastroEndereco");
+                });
+
             modelBuilder.Entity("ShoppingCart.Business.Models.Cadastro", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Bairro")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DataNascimento")
+                        .HasColumnType("datetime2");
 
-                    b.Property<string>("Cep")
-                        .HasColumnType("varchar(8)");
-
-                    b.Property<string>("Cidade")
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Complemento")
-                        .HasColumnType("varchar(250)");
+                    b.Property<string>("Documento")
+                        .IsRequired()
+                        .HasColumnType("varchar(14)");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("Estado")
+                        .IsRequired()
                         .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Logradouro")
-                        .HasColumnType("varchar(250)");
 
                     b.Property<string>("Nome")
-                        .HasColumnType("varchar(250)");
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Numero")
-                        .HasColumnType("varchar(8)");
+                    b.Property<string>("Sobrenome")
+                        .IsRequired()
+                        .HasColumnType("varchar(80)");
 
                     b.Property<string>("Telefone")
-                        .HasColumnType("varchar(50)");
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Cadastros");
+                });
+
+            modelBuilder.Entity("ShoppingCart.Business.Models.Endereco", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Bairro")
+                        .IsRequired()
+                        .HasColumnType("varchar(35)");
+
+                    b.Property<string>("Cep")
+                        .IsRequired()
+                        .HasColumnType("varchar(9)");
+
+                    b.Property<string>("Cidade")
+                        .IsRequired()
+                        .HasColumnType("varchar(35)");
+
+                    b.Property<string>("Complemento")
+                        .HasColumnType("varchar(70)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("varchar(35)");
+
+                    b.Property<string>("Logradouro")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasColumnType("varchar(7)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Enderecos");
                 });
 
             modelBuilder.Entity("ShoppingCart.Business.Models.ItemPedido", b =>
@@ -72,7 +118,8 @@ namespace ShoppingCart.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("PrecoUnitario")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<Guid>("ProdutoId")
                         .HasColumnType("uniqueidentifier");
@@ -84,7 +131,8 @@ namespace ShoppingCart.Data.Migrations
 
                     b.HasIndex("PedidoId");
 
-                    b.HasIndex("ProdutoId");
+                    b.HasIndex("ProdutoId")
+                        .IsUnique();
 
                     b.ToTable("ItemPedidos");
                 });
@@ -95,8 +143,13 @@ namespace ShoppingCart.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CadastroId")
+                    b.Property<Guid?>("CadastroId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Finalizado")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.HasKey("Id");
 
@@ -118,7 +171,7 @@ namespace ShoppingCart.Data.Migrations
 
                     b.Property<string>("Descricao")
                         .IsRequired()
-                        .HasColumnType("varchar(1000)");
+                        .HasColumnType("varchar(4000)");
 
                     b.Property<string>("Imagem")
                         .IsRequired()
@@ -129,11 +182,27 @@ namespace ShoppingCart.Data.Migrations
                         .HasColumnType("varchar(250)");
 
                     b.Property<decimal>("Preco")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Produtos");
+                });
+
+            modelBuilder.Entity("CadastroEndereco", b =>
+                {
+                    b.HasOne("ShoppingCart.Business.Models.Cadastro", null)
+                        .WithMany()
+                        .HasForeignKey("CadastrosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShoppingCart.Business.Models.Endereco", null)
+                        .WithMany()
+                        .HasForeignKey("EnderecosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ShoppingCart.Business.Models.ItemPedido", b =>
@@ -145,8 +214,8 @@ namespace ShoppingCart.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("ShoppingCart.Business.Models.Produto", "Produto")
-                        .WithMany()
-                        .HasForeignKey("ProdutoId")
+                        .WithOne()
+                        .HasForeignKey("ShoppingCart.Business.Models.ItemPedido", "ProdutoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -159,9 +228,7 @@ namespace ShoppingCart.Data.Migrations
                 {
                     b.HasOne("ShoppingCart.Business.Models.Cadastro", "Cadastro")
                         .WithMany("Pedidos")
-                        .HasForeignKey("CadastroId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CadastroId");
 
                     b.Navigation("Cadastro");
                 });

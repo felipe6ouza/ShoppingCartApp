@@ -2,7 +2,7 @@
 using ShoppingCart.App.ViewModels;
 using ShoppingCart.Business.Models;
 
-namespace ShoppingCart.App.AutoMapper
+namespace ShoppingCart.App.Configurations
 {
     public class AutoMapperConfig : Profile
     {
@@ -12,6 +12,7 @@ namespace ShoppingCart.App.AutoMapper
             CreateMap<Pedido, PedidoViewModel>().ReverseMap();
             CreateMap<ItemPedido, ItemPedidoViewModel>().ReverseMap();
             CreateMap<Produto, ProdutoViewModel>().ReverseMap();
+            CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
         }
     }
 }

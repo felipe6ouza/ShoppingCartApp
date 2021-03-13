@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShoppingCart.Data.Context;
-using AutoMapper;
 using System;
 using ShoppingCart.App.Configurations;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +12,6 @@ using ShoppingCart.App.Data;
 using ShoppingCart.App.Areas.Identity.Data;
 using ShoppingCart.App.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace ShoppingCart.App
 {

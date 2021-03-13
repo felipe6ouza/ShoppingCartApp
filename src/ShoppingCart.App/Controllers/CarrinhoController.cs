@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using ShoppingCart.App.Areas.Identity.Data;
 using ShoppingCart.App.ViewModels;
 using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Business.Models;
@@ -16,16 +18,15 @@ namespace ShoppingCart.App.Controllers
         private readonly IItemPedidoRepository _itemPedidoRepository;
         private readonly IPedidoRepository _pedidoRepository;
         private readonly IProdutoRepository _produtoRepository;
-        private readonly IMapper _mapper;
+  
 
         public CarrinhoController(IPedidoRepository pedidoRepository, IItemPedidoRepository itemPedidoRepository,
-            IProdutoRepository produtoRepository,
-            IMapper mapper, INotificador notificador):base(notificador)
+            IProdutoRepository produtoRepository, UserManager<Usuario> userManager,
+            IMapper mapper, IHttpContextAccessor accessor, INotificador notificador):base(notificador, mapper)
         {
             _itemPedidoRepository = itemPedidoRepository;
             _pedidoRepository = pedidoRepository;
             _produtoRepository = produtoRepository;
-            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
@@ -147,6 +148,7 @@ namespace ShoppingCart.App.Controllers
         {
             HttpContext.Session.SetString("pedidoId", pedidoId.ToString());
         }
+
 
     }
 }
