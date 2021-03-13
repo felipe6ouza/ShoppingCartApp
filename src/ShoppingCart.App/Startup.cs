@@ -9,6 +9,11 @@ using AutoMapper;
 using System;
 using ShoppingCart.App.Configurations;
 using Microsoft.Extensions.Hosting;
+using ShoppingCart.App.Data;
+using ShoppingCart.App.Areas.Identity.Data;
+using ShoppingCart.App.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace ShoppingCart.App
 {
@@ -33,9 +38,15 @@ namespace ShoppingCart.App
 
             services.AddDbContext<ShoppingCartDbContext>(options =>
               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            
+          
+                services.AddDbContext<IdentityContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("IdentityContextConnection"), b => b.MigrationsAssembly("ShoppingCart.App"))                    );
 
-            services.AddDistributedMemoryCache();
+                services.AddDefaultIdentity<Usuario>(options => options.SignIn.RequireConfirmedAccount = false)
+                    .AddEntityFrameworkStores<IdentityContext>();
+
+
+                services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
             {
@@ -47,6 +58,16 @@ namespace ShoppingCart.App
             services.ResolveDependencies();
 
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Criar", policy => policy.Requirements.Add(new PermissaoNecessaria("Criar")));
+                options.AddPolicy("Excluir", policy => policy.Requirements.Add(new PermissaoNecessaria("Excluir")));
+                options.AddPolicy("Editar", policy => policy.Requirements.Add(new PermissaoNecessaria("Editar")));
+                options.AddPolicy("Ler", policy => policy.Requirements.Add(new PermissaoNecessaria("Ler")));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, PermissaoNecessariaHandler>();
 
 
             services.AddControllersWithViews();
@@ -73,6 +94,7 @@ namespace ShoppingCart.App
             app.UseAuthentication();
 
             app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

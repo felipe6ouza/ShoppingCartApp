@@ -1,13 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ShoppingCart.App.Data;
 using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Business.Notificacoes;
 using ShoppingCart.Business.Services;
 using ShoppingCart.Data.Context;
 using ShoppingCart.Data.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ShoppingCart.App.Configurations
 {
@@ -16,6 +13,7 @@ namespace ShoppingCart.App.Configurations
         public static IServiceCollection ResolveDependencies (this IServiceCollection services)
         {
             services.AddScoped<ShoppingCartDbContext>();
+            services.AddScoped<IdentityContext>();
             services.AddScoped<ICadastroRepository, CadastroRepository>();
             services.AddScoped<IPedidoRepository, PedidoRepository>();
             services.AddScoped<IItemPedidoRepository, ItemPedidoRepository>();

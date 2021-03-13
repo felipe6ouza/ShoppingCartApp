@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ShoppingCart.App.ViewModels;
 using ShoppingCart.Business.Interfaces;
 using ShoppingCart.Business.Models;
@@ -43,9 +43,9 @@ namespace ShoppingCart.App.Controllers
 
         public async Task<IActionResult> Details(Guid id)
         {
-            if (id == null)
+            if (id == Guid.Empty)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             var produtoViewModel = await ObterProdutoViewModelPorId(id);
@@ -58,6 +58,7 @@ namespace ShoppingCart.App.Controllers
             return View(produtoViewModel);
         }
 
+        [Authorize (Policy ="Criar")]
         public IActionResult Create()
         {
             return View();
@@ -89,9 +90,9 @@ namespace ShoppingCart.App.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            if (id == null)
+            if (id == Guid.Empty)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             var produtoViewModel = await ObterProdutoViewModelPorId(id);
@@ -106,7 +107,7 @@ namespace ShoppingCart.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProdutoViewModel produtoViewModel)
         {
-            if (id != produtoViewModel.Id) return NotFound();
+            if (id != produtoViewModel.Id) return BadRequest();
 
             if (!ModelState.IsValid) return View(produtoViewModel);
 
@@ -122,7 +123,7 @@ namespace ShoppingCart.App.Controllers
 
         public async Task<IActionResult> Delete(Guid id)
         {
-            if (id == null) return NotFound();
+            if (id == Guid.Empty) return BadRequest();
            
             var produtoViewModel = await ObterProdutoViewModelPorId(id);
             
